@@ -1,0 +1,39 @@
+services:
+  app:
+    command: make backend-migrations
+    # command: poetry run python companyXbackend/manage.py makemigrations
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - backend_data:/app
+    ports:
+      - "8084:8084"
+    depends_on:
+      backend_postgres:
+        condition: service_healthy
+    env_file: ".env"
+
+  # test:
+  #   command: python manage.py test companyXbackend.users.tests.test_models
+  #   build: .
+
+  backend_postgres:
+    image: postgres:13-alpine
+    volumes:
+      - backend_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -d backend_db
+      retries: 3
+      timeout: 5s
+      interval: 10s
+    environment:
+      - POSTGRES_DB=backend_db
+      - POSTGRES_USER=backend_user
+      - POSTGRES_PASSWORD=backend_password
+    ports:
+      - "5432:5432"
+
+volumes:
+  backend_data:
+  backend_postgres_data:

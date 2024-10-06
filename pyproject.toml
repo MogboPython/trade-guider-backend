@@ -1,0 +1,105 @@
+[tool.poetry]
+name = "companyx"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Django = "^5.1.1"
+python-dotenv = "^1.0.1"
+djangorestframework = "^3.15.2"
+shortuuid = "^1.0.13"
+environs = "^11.0.0"
+dj-database-url = "^2.2.0"
+psycopg2-binary = "^2.9.9"
+pytest-sugar = "^1.0.0"
+requests = "^2.32.3"
+redis = {extras = ["hiredis"], version = "^5.1.0"}
+django-cache-url = "^3.4.5"
+pyjwt = "^2.9.0"
+django-cors-headers = "^4.4.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.8"
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
+
+[tool.ruff.lint]
+exclude = ["**/migrations/*.py"]
+select = [
+    "E",
+    "W",
+    "F",
+    "UP",
+    "B",
+    "SIM",
+    "I",
+    "N",
+    "ASYNC",
+    "S",
+    "BLE",
+    "FBT",
+    "A",
+    "COM",
+    "C4",
+    "DTZ",
+    "DJ",
+    "EM",
+    "EXE",
+    "ISC",
+    "ICN",
+    "LOG",
+    "G",
+    "INP",
+    "PIE",
+    "T20",
+    "PYI",
+    "PT",
+    "RSE",
+    "RET",
+    "SLF",
+    "TID",
+    "TCH",
+    "ARG",
+    "PTH",
+    "PL",
+    "TRY",
+    "FLY",
+    "PERF",
+    "FURB",
+    "RUF",
+]
+ignore = ["COM812", "ISC001", "DJ008", "PLR0913", "PLR2004", "RUF012", "ARG002"]
+
+[tool.ruff.lint.isort]
+length-sort = true
+combine-as-imports = true
+length-sort-straight = true
+section-order = ["future", "standard-library", "third-party","django", "restframework", "companyXbackend", "first-party", "local-folder"]
+
+[tool.ruff.lint.isort.sections]
+"companyXbackend" = ["companyXbackend"]
+"django" = ["django"]
+"fastapi" = ["fastapi"]
+"restframework" = ["rest_framework", "drf_yasg"]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_**.py" = ["S101", "S105", "S106", "ANN201", "PT004", "FBT002"]
+"**/conftest.py" = ["S101", "S105", "S106", "ANN201", "PT004"]
+"**/server.py" = ["N802"]
+"companyXbackend/**/test_**.py" = ["PT009", "PT027"]

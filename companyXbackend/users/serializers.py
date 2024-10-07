@@ -1,13 +1,9 @@
 from business.models import Company
-from business.serializers import CompanySerializer
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from users.models import User, Review, ReviewFlags, ReviewLikes
-
-# class RequestOTPSerializer(serializers.Serializer):
-#     email = serializers.EmailField()
 
 
 class LoginWithOTPSerializer(serializers.Serializer):
@@ -37,44 +33,48 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        user = User.objects.create(
+        return User.objects.create(
             name=validated_data['name'],
             email=validated_data['email'],
             country=validated_data['country'],
             language=validated_data['language']
         )
-        user.save()
-
-        return user
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    company = CompanySerializer()
+    company = serializers.PrimaryKeyRelatedField(queryset=Company.objects.all(), many = False)
 
     class Meta:
-        module = Review
+        model = Review
         fields = [
+            'id',
             "user",
             "company",
             "rating",
             "title",
             "review_body",
             "date_of_experience",
-            "invoice_number",
             "created_at",
             "updated_at",
         ]
         extra_kwargs = {
+            'id': {'read_only': True},
+            'user': {'read_only': True},
             'created_at': {'read_only': True},
             'updated_at': {'read_only': True},
         }
 
-        def create(self, validated_data):
-            #TODO: check how this should work
-            user = self.context['request'].user
-            company_id = self.context['request'].data.get('company')
-            company = Company.objects.get(id=company_id)
-            return Review.objects.create(user=user, company=company, **validated_data)
+    def create(self, validated_data):
+        user = self.context['request'].user
+        company = validated_data.pop('company')
+        return Review.objects.create(
+            user=user,
+            company=company,
+            rating=validated_data["rating"],
+            title=validated_data["title"],
+            review_body=validated_data["review_body"],
+            date_of_experience=validated_data["date_of_experience"],
+
+        )
 
 class ReviewLikesSerializer(serializers.ModelSerializer):
     class Meta:

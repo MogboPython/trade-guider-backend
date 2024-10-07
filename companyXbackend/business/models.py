@@ -36,6 +36,10 @@ class Company(models.Model):
     def average_rating(self):
         return self.reviews.aggregate(models.Avg('rating'))['rating__avg'] or 0
 
+    @property
+    def is_authenticated(self):
+        return True
+
 # website
 # company_name
 # first_name

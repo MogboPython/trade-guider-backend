@@ -32,6 +32,10 @@ class User(models.Model):
     def number_of_reviews(self):
         return self.reviews.count()
 
+    @property
+    def is_authenticated(self):
+        return True
+
 
 class Review(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)

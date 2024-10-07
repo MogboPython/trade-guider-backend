@@ -5,18 +5,17 @@ from common.helpers import send_email, generate_access_token, generate_refresh_t
 from django.core.cache import cache
 
 from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import User, Review
-from .serializers import UserSerializer, LoginWithOTPSerializer
+from .models import User
+from .serializers import UserSerializer, ReviewSerializer, LoginWithOTPSerializer
 
 # Create your views here.
 
 class RegisterUserAPIView(GenericAPIView):
+    """Endpoint to register a new user."""
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
 
@@ -55,6 +54,7 @@ class RegisterUserAPIView(GenericAPIView):
         )
 
 class LoginWithOtpAPIView(GenericAPIView):
+    """Endpoint to login a user."""
     serializer_class = LoginWithOTPSerializer
 
     def post(self, request, *args, **kwargs):
@@ -83,27 +83,26 @@ class LoginWithOtpAPIView(GenericAPIView):
             data={'success': True, 'data': {'access_token': access_token, 'refresh_token': refresh_token}},
         )
 
-class SubmitReviewView(APIView):
-    """Endpoint to create a new book."""
+class SubmitReviewView(CreateAPIView):
+    """Endpoint to create a new review."""
     permission_classes = [IsAuthenticated]
-    parser_classes = [FormParser, MultiPartParser]
+    serializer_class = ReviewSerializer
 
     def post(self, request, *args, **kwargs):
-        file = request.data.get('file')
-        if not file:
-            return Response({'success': False, 'error': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        Review.objects.create(
-            file=file,
-            user=request.user,
-        )
+        review = serializer.save()
+        response_serializer = self.get_serializer(review)
 
         return Response(
-            data={'success': True},
+            data={'success': True, 'data': response_serializer.data},
             status=status.HTTP_200_OK,
         )
 
 # TODO: get all reviews, authentication not needed
+# TODO: get all reviews by single user for themselves, authentication needed ******
+# TODO: get all reviews by single user, authentication not needed
 
 # class UserAuthenticationAPIView(GenericAPIView):
 #     permission_classes = [AllowAny]

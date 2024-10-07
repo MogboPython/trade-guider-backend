@@ -1,3 +1,5 @@
+from datetime import date
+
 import shortuuid
 from business.models import Company
 
@@ -88,7 +90,7 @@ class TestReviewModel(TestCase):
             title="Excellent Service!",
             review_body="I had a fantastic experience with this company. \
                 Their service was top-notch and the staff were very professional.",
-            date_of_experience='2024-01-15',
+            date_of_experience=date(2024, 1, 15),
         )
 
     def test_review_creation(self):
@@ -99,7 +101,7 @@ class TestReviewModel(TestCase):
         self.assertEqual(self.review.review_body, 'I had a fantastic experience with this company. \
                 Their service was top-notch and the staff were very professional.')
         self.assertEqual(self.review.title, 'Excellent Service!')
-        self.assertEqual(self.review.date_of_experience, '2024-01-15')
+        self.assertEqual(self.review.date_of_experience, date(2024, 1, 15))
 
     def test_review_str_method(self):
         self.assertEqual(str(self.review), "Harper Lee's review of Tech Solutions Inc.")

@@ -14,7 +14,6 @@ shortuuid = "^1.0.13"
 environs = "^11.0.0"
 dj-database-url = "^2.2.0"
 psycopg2-binary = "^2.9.9"
-pytest-sugar = "^1.0.0"
 requests = "^2.32.3"
 redis = {extras = ["hiredis"], version = "^5.1.0"}
 django-cache-url = "^3.4.5"
@@ -24,6 +23,7 @@ django-cors-headers = "^4.4.0"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.8"
 pytest = "^8.3.3"
+pytest-sugar = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

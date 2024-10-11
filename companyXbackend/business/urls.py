@@ -1,9 +1,7 @@
 from django.urls import path
 
-from users import views
+from .views import RegisterCompanyAPIView
 
-# TODO: reviews for a particular company
-# urlpatterns = [
-    
-#     path("", views.index, name="index"),
-# ]
+urlpatterns = [
+    path("company/register", RegisterCompanyAPIView.as_view(), name="company-register")
+]

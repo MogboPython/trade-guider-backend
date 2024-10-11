@@ -46,6 +46,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'drf_yasg',
     'rest_framework',
 ]
 
@@ -156,6 +157,12 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379",
     }
 }
+
+
+# ==============================================================================
+# DRF-YASG SETTINGS
+# ==============================================================================
+SWAGGER_SETTINGS = {'SECURITY_DEFINITIONS': {'Bearer': {'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}}}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['common.authentication.JWTAuthentication'],

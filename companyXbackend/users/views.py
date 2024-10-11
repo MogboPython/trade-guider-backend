@@ -159,6 +159,17 @@ class SubmitReviewView(CreateAPIView):
             status=status.HTTP_200_OK,
         )
 
+class ReviewListView(ListAPIView):
+    queryset = Review.objects.all().order_by('-created_at')
+    serializer_class = ReviewSerializer
+    pagination_class = CustomPagination
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        return success_response(serializer.data)
+
 class UserReviewListView(ListAPIView):
     queryset = Review.objects.all().order_by('-created_at')
     serializer_class = ReviewSerializer

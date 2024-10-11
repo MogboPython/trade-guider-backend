@@ -19,6 +19,7 @@ redis = {extras = ["hiredis"], version = "^5.1.0"}
 django-cache-url = "^3.4.5"
 pyjwt = "^2.9.0"
 django-cors-headers = "^4.4.0"
+drf-yasg = "^1.21.7"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.8"

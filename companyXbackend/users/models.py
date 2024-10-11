@@ -77,14 +77,3 @@ class ReviewFlags(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='flags')
     created_at = models.DateTimeField(auto_now_add=True)
-
-    # author = models.CharField(max_length=200)
-    # stars
-    # review_body: Textfield
-    # title: charfield
-    # date of experience: datefield
-    # created at
-    # invoice number: optional
-    # company ID
-    # user ID
-    # likes

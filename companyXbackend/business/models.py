@@ -8,16 +8,18 @@ class Company(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)
 
     company_name = models.CharField(max_length=200)
-    industry = models.CharField(max_length=100)
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    job_title = models.CharField(max_length=200)
-    work_email = models.EmailField(max_length=200)
-    phone_number = models.CharField(max_length=15)
+    category = models.CharField(max_length=100)
+    subcategory = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200, default="")
+    last_name = models.CharField(max_length=200, default="")
+    job_title = models.CharField(max_length=200, default="")
+    work_email = models.EmailField(max_length=200, default="")
+    phone_number = models.CharField(max_length=15, default="")
     country = models.CharField(max_length=100)
     website = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
+    is_claimed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.company_name
@@ -25,6 +27,9 @@ class Company(models.Model):
     def save(self, *args, **kwargs) -> None:
         if not self.id:
             self.id = f'{shortuuid.uuid()}'
+
+        if self.work_email:
+            self.is_claimed = True
 
         return super().save(*args, **kwargs)
 

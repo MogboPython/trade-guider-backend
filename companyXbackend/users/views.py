@@ -24,6 +24,7 @@ class CustomPagination(PageNumberPagination):
 
 class RegisterUserAPIView(GenericAPIView):
     """Endpoint to register a new user."""
+
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
 
@@ -55,20 +56,18 @@ class RegisterUserAPIView(GenericAPIView):
         """  # noqa: E501
 
         # TODO: don't forget
-        # send_email(to=email, subject=email_subject, html=email_body)
-        # serializer = self.get_serializer(user)
-        # data = serializer.data
-        # return success_response(data, status.HTTP_200_OK)
+        send_email(to=email, subject=email_subject, html=email_body)
+        serializer = self.get_serializer(user)
+        response_data = serializer.data
 
-        return Response(
-            # TODO: remove, leave only for testing
-            data={'success': True, 'message': 'Verification code sent to your email address', 'code' : otp},
-            status=status.HTTP_200_OK,
-        )
+        # TODO: remove, leave only for testing
+        data={'message': 'Verification code sent to your email address', 'data': response_data, 'code' : otp}
+        return success_response(data, status.HTTP_200_OK)
 
 # TODO: login route that returns otp
 class LoginOtpAPIView(GenericAPIView):
     """Endpoint to get login otp for a user."""
+
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
@@ -98,15 +97,13 @@ class LoginOtpAPIView(GenericAPIView):
 
         send_email(to=email, subject=email_subject, html=email_body)
 
-        return Response(
-            # TODO: remove, leave only for testing
-            data={'success': True, 'message': 'Login code sent to your email address', 'email': email, 'code' : otp},
-            status=status.HTTP_200_OK,
-        )
-
+        # TODO: remove, leave only for testing
+        data={'message': 'Login code sent to your email address', 'email': email, 'code' : otp}
+        return success_response(data, status.HTTP_200_OK)
 
 class LoginWithOtpAPIView(GenericAPIView):
     """Endpoint to login a user."""
+
     serializer_class = LoginWithOTPSerializer
 
     def post(self, request, *args, **kwargs):
@@ -144,6 +141,7 @@ class LoginWithOtpAPIView(GenericAPIView):
 
 class SubmitReviewView(CreateAPIView):
     """Endpoint to create a new review."""
+
     permission_classes = [IsAuthenticated]
     serializer_class = ReviewSerializer
 
@@ -160,6 +158,8 @@ class SubmitReviewView(CreateAPIView):
         )
 
 class ReviewListView(ListAPIView):
+    """Endpoint to fetch all reviews."""
+
     queryset = Review.objects.all().order_by('-created_at')
     serializer_class = ReviewSerializer
     pagination_class = CustomPagination
@@ -171,6 +171,8 @@ class ReviewListView(ListAPIView):
         return success_response(serializer.data)
 
 class UserReviewListView(ListAPIView):
+    """Endpoint to fetch all reviews by a User."""
+
     queryset = Review.objects.all().order_by('-created_at')
     serializer_class = ReviewSerializer
     pagination_class = CustomPagination
@@ -190,6 +192,8 @@ class UserReviewListView(ListAPIView):
         return success_response(serializer.data)
 
 class ReviewDetailAPIView(ListAPIView):
+    """Endpoint to fetch details of a single review."""
+
     lookup_field = 'id'
     serializer_class = ReviewSerializer
     queryset = Review.objects.get_queryset()
@@ -201,10 +205,8 @@ class ReviewDetailAPIView(ListAPIView):
 
         return success_response(data)
 
-# TODO: get all reviews, authentication not needed, single review view
-# TODO: get all reviews by single user for themselves, authentication needed ******
-# TODO: get all reviews by single user, authentication not needed
-# TODO: Swagger ui
+# TODO: get all reviews by single user for themselves, authentication needed, delete review? ******
+# TODO: Route to update profile
 
 # class UserAuthenticationAPIView(GenericAPIView):
 #     permission_classes = [AllowAny]

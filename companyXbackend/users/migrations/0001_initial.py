@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -30,15 +29,33 @@ class Migration(migrations.Migration):
             name='Review',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('rating', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(5)])),
+                (
+                    'rating',
+                    models.IntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(5),
+                        ]
+                    ),
+                ),
                 ('title', models.CharField(max_length=200)),
                 ('review_body', models.TextField()),
                 ('date_of_experience', models.DateField(default=None)),
                 ('invoice_number', models.CharField(default=None, max_length=27)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='business.company')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='users.user')),
+                (
+                    'company',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='business.company'
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='users.user'
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -46,7 +63,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('review', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='users.review')),
+                (
+                    'review',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='users.review'
+                    ),
+                ),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user')),
             ],
         ),
@@ -55,7 +77,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('review', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='flags', to='users.review')),
+                (
+                    'review',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name='flags', to='users.review'
+                    ),
+                ),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user')),
             ],
         ),

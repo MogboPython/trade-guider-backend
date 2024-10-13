@@ -16,7 +16,7 @@ from datetime import timedelta
 from environs import Env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = Env()
 
@@ -24,14 +24,17 @@ env = Env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("API_SECRET_KEY")
+# ==============================================================================
+# CORE SETTINGS
+# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# ==============================================================================
+DEBUG = env.bool('DEBUG', True)
+if DEBUG:
+    env.read_env(BASE_DIR / '.env')
 
-# TODO: remove debug set to true
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = env.str('API_SECRET_KEY')
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,6 +47,8 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+if DEBUG:
+    DJANGO_APPS.insert(5, 'whitenoise.runserver_nostatic')
 
 THIRD_PARTY_APPS = [
     'drf_yasg',
@@ -57,6 +62,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,6 +88,11 @@ TEMPLATES = [
         },
     },
 ]
+
+# ==============================================================================
+# STORAGES SETTINGS
+# ==============================================================================
+STORAGES = {'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'}}
 
 WSGI_APPLICATION = 'companyXbackend.wsgi.application'
 
@@ -150,11 +161,10 @@ X_FRAME_OPTIONS = 'DENY'
 # ==============================================================================
 # CACHING
 # ==============================================================================
-# CACHES = {'default': env.dj_cache_url('CACHE_URL')}
 CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
     }
 }
 

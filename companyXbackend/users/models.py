@@ -6,6 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
+
 class User(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)
 
@@ -66,11 +67,13 @@ class Review(models.Model):
     def number_of_flags(self):
         return self.flags.count()
 
+
 # TODO: Check who liked
 class ReviewLikes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 # TODO: Check who tagged
 class ReviewFlags(models.Model):

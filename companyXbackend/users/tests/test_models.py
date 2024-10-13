@@ -13,7 +13,7 @@ class TestUserModel(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             id=f'user_{shortuuid.uuid()}',
-            email="tester@gmail.com",
+            email='tester@gmail.com',
             name='Harper Lee',
             country='China',
             language='Chinese',
@@ -21,16 +21,16 @@ class TestUserModel(TestCase):
 
         self.tech = Company.objects.create(
             id=f'{shortuuid.uuid()}',
-            company_name="Tech Solutions Inc.",
-            industry="Information Technology",
-            first_name="Alice",
-            last_name="Johnson",
-            job_title="CEO",
-            work_email="alice.johnson@techsolutions.com",
-            phone_number="+1234567890",
-            country="USA",
-            website="https://www.techsolutions.com",
-            is_verified=True
+            company_name='Tech Solutions Inc.',
+            category='Information Technology',
+            first_name='Alice',
+            last_name='Johnson',
+            job_title='CEO',
+            work_email='alice.johnson@techsolutions.com',
+            phone_number='+1234567890',
+            country='USA',
+            website='https://www.techsolutions.com',
+            is_verified=True,
         )
 
     def test_user_creation(self):
@@ -51,19 +51,20 @@ class TestUserModel(TestCase):
             user=self.user,
             company=self.tech,
             rating=5,
-            title="Excellent Service!",
-            review_body="I had a fantastic experience with this company. \
-                Their service was top-notch and the staff were very professional.",
+            title='Excellent Service!',
+            review_body='I had a fantastic experience with this company. \
+                Their service was top-notch and the staff were very professional.',
             date_of_experience=timezone.now(),
         )
 
         self.assertEqual(self.user.number_of_reviews, 1)
 
+
 class TestReviewModel(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             id=f'user_{shortuuid.uuid()}',
-            email="tester@gmail.com",
+            email='tester@gmail.com',
             name='Harper Lee',
             country='China',
             language='Chinese',
@@ -71,25 +72,25 @@ class TestReviewModel(TestCase):
 
         self.tech = Company.objects.create(
             id=f'{shortuuid.uuid()}',
-            company_name="Tech Solutions Inc.",
-            industry="Information Technology",
-            first_name="Alice",
-            last_name="Johnson",
-            job_title="CEO",
-            work_email="alice.johnson@techsolutions.com",
-            phone_number="+1234567890",
-            country="USA",
-            website="https://www.techsolutions.com",
-            is_verified=True
+            company_name='Tech Solutions Inc.',
+            category='Information Technology',
+            first_name='Alice',
+            last_name='Johnson',
+            job_title='CEO',
+            work_email='alice.johnson@techsolutions.com',
+            phone_number='+1234567890',
+            country='USA',
+            website='https://www.techsolutions.com',
+            is_verified=True,
         )
 
         self.review = Review.objects.create(
             user=self.user,
             company=self.tech,
             rating=5,
-            title="Excellent Service!",
-            review_body="I had a fantastic experience with this company. \
-                Their service was top-notch and the staff were very professional.",
+            title='Excellent Service!',
+            review_body='I had a fantastic experience with this company. \
+                Their service was top-notch and the staff were very professional.',
             date_of_experience=date(2024, 1, 15),
         )
 
@@ -98,8 +99,11 @@ class TestReviewModel(TestCase):
         self.assertTrue(isinstance(self.review.user, User))
         self.assertTrue(isinstance(self.review.company, Company))
         self.assertEqual(self.review.rating, 5)
-        self.assertEqual(self.review.review_body, 'I had a fantastic experience with this company. \
-                Their service was top-notch and the staff were very professional.')
+        self.assertEqual(
+            self.review.review_body,
+            'I had a fantastic experience with this company. \
+                Their service was top-notch and the staff were very professional.',
+        )
         self.assertEqual(self.review.title, 'Excellent Service!')
         self.assertEqual(self.review.date_of_experience, date(2024, 1, 15))
 
@@ -110,8 +114,8 @@ class TestReviewModel(TestCase):
         self.assertEqual(self.review.number_of_likes, 0)
 
         ReviewLikes.objects.create(
-            user = self.user,
-            review = self.review,
+            user=self.user,
+            review=self.review,
         )
 
         self.assertEqual(self.review.number_of_likes, 1)
@@ -120,8 +124,8 @@ class TestReviewModel(TestCase):
         self.assertEqual(self.review.number_of_flags, 0)
 
         ReviewFlags.objects.create(
-            user = self.user,
-            review = self.review,
+            user=self.user,
+            review=self.review,
         )
 
         self.assertEqual(self.review.number_of_flags, 1)

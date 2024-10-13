@@ -21,4 +21,9 @@ COPY companyXbackend /app/companyXbackend
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-ENTRYPOINT []
+# ENTRYPOINT []
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "companyXbackend.wsgi"]
+# CMD ["python", "companyXbackend/manage.py", "migrate", "--noinput"]

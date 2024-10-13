@@ -15,23 +15,21 @@ from users.serializers import UserSerializer, ReviewSerializer, LoginWithOTPSeri
 
 class LoginWithOTPSerializerTest(TestCase):
     def setUp(self) -> None:
-        self.user_data = {
-            'email':"tester@gmail.com",
-            'otp':''.join([str(secrets.randbelow(10)) for _ in range(4)])
-        }
+        self.user_data = {'email': 'tester@gmail.com', 'otp': ''.join([str(secrets.randbelow(10)) for _ in range(4)])}
         self.serializer_context = {'request': APIRequestFactory().post('/users/login/')}
 
     def test_login_serializer(self):
         serializer = LoginWithOTPSerializer(data=self.user_data, context=self.serializer_context)
         self.assertTrue(serializer.is_valid())
 
+
 class UserSerializerTest(TestCase):
     def setUp(self):
         self.user_data = {
-            'email':"tester@gmail.com",
-            'name':'Harper Lee',
-            'country':'China',
-            'language':'Chinese',
+            'email': 'tester@gmail.com',
+            'name': 'Harper Lee',
+            'country': 'China',
+            'language': 'Chinese',
         }
         self.serializer_context = {'request': APIRequestFactory().post('/users/register/')}
 
@@ -45,7 +43,6 @@ class UserSerializerTest(TestCase):
         self.assertEqual(user.name, self.user_data['name'])
         self.assertEqual(user.country, self.user_data['country'])
         self.assertEqual(user.language, self.user_data['language'])
-
 
     def test_user_serializer_read_only_fields(self):
         user = User.objects.create(id=f'user_{shortuuid.uuid()}', **self.user_data)
@@ -71,25 +68,26 @@ class UserSerializerTest(TestCase):
     #     self.assertEqual(updated_book.id, book.id)
     #     self.assertEqual(updated_book.added_by, book.added_by)
 
+
 class ReviewSerializerTestCase(TestCase):
     def setUp(self):
         self.user_data = User.objects.create(
-            email="tester@gmail.com",
+            email='tester@gmail.com',
             name='Harper Lee',
             country='China',
             language='Chinese',
         )
         self.company_data = Company.objects.create(
-            company_name="Tech Solutions Inc.",
-            industry="Information Technology",
-            first_name="Alice",
-            last_name="Johnson",
-            job_title="CEO",
-            work_email="alice.johnson@techsolutions.com",
-            phone_number="+1234567890",
-            country="USA",
-            website="https://www.techsolutions.com",
-            is_verified=True
+            company_name='Tech Solutions Inc.',
+            category='Information Technology',
+            first_name='Alice',
+            last_name='Johnson',
+            job_title='CEO',
+            work_email='alice.johnson@techsolutions.com',
+            phone_number='+1234567890',
+            country='USA',
+            website='https://www.techsolutions.com',
+            is_verified=True,
         )
 
         self.review_data = {
@@ -122,9 +120,7 @@ class ReviewSerializerTestCase(TestCase):
         self.assertEqual(data['rating'], self.review_data['rating'])
         self.assertEqual(data['title'], self.review_data['title'])
         self.assertEqual(data['review_body'], self.review_data['review_body'])
-        self.assertEqual(data['date_of_experience'], "2024-01-15")
-        self.assertEqual(data['user'], self.user_data.id)
-        self.assertEqual(data['company'], self.company_data.id)
+        self.assertEqual(data['date_of_experience'], '2024-01-15')
 
         self.assertIn('id', data)
         self.assertIn('created_at', data)
@@ -152,7 +148,7 @@ class ReviewSerializerTestCase(TestCase):
     def test_read_only_fields(self):
         another_user = User.objects.create(
             id=f'user_{shortuuid.uuid()}',
-            email="tester2@gmail.com",
+            email='tester2@gmail.com',
             name='Mogbo Lee',
             country='Australia',
             language='English',

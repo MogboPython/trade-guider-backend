@@ -26,9 +26,9 @@ def custom_exception_handler(exception, context) -> Response | None:
 
     if isinstance(exception, APIException):
         if isinstance(exception.detail, dict):
-            error_message = " ".join([f"{key}: {value[0]}" for key, value in exception.detail.items()])
+            error_message = ' '.join([f'{key}: {value[0]}' for key, value in exception.detail.items()])
         elif isinstance(exception.detail, list):
-            error_message = " ".join([str(item) for item in exception.detail])
+            error_message = ' '.join([str(item) for item in exception.detail])
         else:
             error_message = str(exception.detail)
 

@@ -8,6 +8,7 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
+
 def send_email(to: str, subject: str, html: str) -> dict:
     """
     Send an email using the Plunk API.
@@ -34,6 +35,7 @@ def send_email(to: str, subject: str, html: str) -> dict:
         logger.info(f'Email sent successfully to {to}')  # noqa: G004
     except requests.RequestException:
         logger.exception('Failed to send email')
+
 
 def generate_access_token(user):
     payload = {

@@ -8,8 +8,10 @@ from .serializers import CompanySerializer
 
 # Create your views here.
 
+
 class RegisterCompanyAPIView(GenericAPIView):
     """Endpoint to register a new user."""
+
     permission_classes = [AllowAny]
     serializer_class = CompanySerializer
 

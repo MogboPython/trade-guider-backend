@@ -22,6 +22,7 @@ class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 50
 
+
 class RegisterUserAPIView(GenericAPIView):
     """Endpoint to register a new user."""
 
@@ -61,8 +62,9 @@ class RegisterUserAPIView(GenericAPIView):
         response_data = serializer.data
 
         # TODO: remove, leave only for testing
-        data={'message': 'Verification code sent to your email address', 'data': response_data, 'code' : otp}
+        data = {'message': 'Verification code sent to your email address', 'data': response_data, 'code': otp}
         return success_response(data, status.HTTP_200_OK)
+
 
 # TODO: login route that returns otp
 class LoginOtpAPIView(GenericAPIView):
@@ -98,8 +100,9 @@ class LoginOtpAPIView(GenericAPIView):
         send_email(to=email, subject=email_subject, html=email_body)
 
         # TODO: remove, leave only for testing
-        data={'message': 'Login code sent to your email address', 'email': email, 'code' : otp}
+        data = {'message': 'Login code sent to your email address', 'email': email, 'code': otp}
         return success_response(data, status.HTTP_200_OK)
+
 
 class LoginWithOtpAPIView(GenericAPIView):
     """Endpoint to login a user."""
@@ -132,12 +135,12 @@ class LoginWithOtpAPIView(GenericAPIView):
         cache.delete(f'otp:{email}')
         return Response(
             status=status.HTTP_200_OK,
-            data={'success': True, 'data': {
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-                'user': response_data
-            }},
+            data={
+                'success': True,
+                'data': {'access_token': access_token, 'refresh_token': refresh_token, 'user': response_data},
+            },
         )
+
 
 class SubmitReviewView(CreateAPIView):
     """Endpoint to create a new review."""
@@ -157,6 +160,7 @@ class SubmitReviewView(CreateAPIView):
             status=status.HTTP_200_OK,
         )
 
+
 class ReviewListView(ListAPIView):
     """Endpoint to fetch all reviews."""
 
@@ -169,6 +173,7 @@ class ReviewListView(ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
 
         return success_response(serializer.data)
+
 
 class UserReviewListView(ListAPIView):
     """Endpoint to fetch all reviews by a User."""
@@ -191,6 +196,7 @@ class UserReviewListView(ListAPIView):
 
         return success_response(serializer.data)
 
+
 class ReviewDetailAPIView(ListAPIView):
     """Endpoint to fetch details of a single review."""
 
@@ -204,6 +210,7 @@ class ReviewDetailAPIView(ListAPIView):
         data = serializer.data
 
         return success_response(data)
+
 
 # TODO: get all reviews by single user for themselves, authentication needed, delete review? ******
 # TODO: Route to update profile

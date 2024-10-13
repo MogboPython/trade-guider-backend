@@ -4,17 +4,18 @@ from django.db import models
 
 # Create your models here.
 
+
 class Company(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)
 
     company_name = models.CharField(max_length=200)
     category = models.CharField(max_length=100)
-    subcategory = models.CharField(max_length=200)
-    first_name = models.CharField(max_length=200, default="")
-    last_name = models.CharField(max_length=200, default="")
-    job_title = models.CharField(max_length=200, default="")
-    work_email = models.EmailField(max_length=200, default="")
-    phone_number = models.CharField(max_length=15, default="")
+    subcategory = models.CharField(max_length=200, default='')
+    first_name = models.CharField(max_length=200, default='')
+    last_name = models.CharField(max_length=200, default='')
+    job_title = models.CharField(max_length=200, default='')
+    work_email = models.EmailField(max_length=200, default='')
+    phone_number = models.CharField(max_length=15, default='')
     country = models.CharField(max_length=100)
     website = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -44,6 +45,7 @@ class Company(models.Model):
     @property
     def is_authenticated(self):
         return True
+
 
 # website
 # company_name

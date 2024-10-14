@@ -1,8 +1,8 @@
-from common.responses import success_response
-
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
+
+from common.responses import success_response
 
 from .serializers import CompanySerializer
 

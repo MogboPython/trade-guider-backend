@@ -1,8 +1,5 @@
 import secrets
 
-from common.helpers import send_email, generate_access_token, generate_refresh_token
-from common.responses import success_response
-
 from django.core.cache import cache
 
 from rest_framework import status
@@ -12,6 +9,9 @@ from rest_framework.response import Response
 # Create your views here.
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from common.helpers import send_email, generate_access_token, generate_refresh_token
+from common.responses import success_response
 
 from .models import User, Review
 from .serializers import UserSerializer, LoginSerializer, ReviewSerializer, LoginWithOTPSerializer
@@ -132,7 +132,7 @@ class LoginWithOtpAPIView(GenericAPIView):
         refresh_token = generate_refresh_token(user)
         response_data = UserSerializer(instance=user).data
 
-        cache.delete(f'otp:{email}')
+        # cache.delete(f'otp:{email}')
         return Response(
             status=status.HTTP_200_OK,
             data={

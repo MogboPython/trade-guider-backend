@@ -5,12 +5,12 @@
 
 app = 'companyx'
 primary_region = 'ams'
-console_command = '/app/companyXbackend/manage.py shell'
+console_command = '/app/manage.py shell'
 
 [build]
 
 [deploy]
-  release_command = 'python companyXbackend/manage.py migrate --noinput'
+  release_command = 'python manage.py migrate --settings=company_x_backend.settings.prod --noinput'
 
 [env]
   PORT = '8000'
@@ -29,5 +29,5 @@ console_command = '/app/companyXbackend/manage.py shell'
   cpus = 1
 
 [[statics]]
-  guest_path = '/app/static'
+  guest_path = '/app/staticfiles'
   url_prefix = '/static/'

@@ -5,7 +5,8 @@ z.txt
 fly.toml
 .git/
 *.sqlite3
-.env 
+.env
+.gitignore
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -26,3 +27,5 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+.ruff_cache/
+.vscode/

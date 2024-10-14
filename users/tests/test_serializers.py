@@ -2,7 +2,6 @@ import secrets
 from datetime import date
 
 import shortuuid
-from business.models import Company
 
 from django.test import TestCase
 
@@ -10,6 +9,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.request import Request
 
 from users.models import User, Review
+from business.models import Company
 from users.serializers import UserSerializer, ReviewSerializer, LoginWithOTPSerializer
 
 

@@ -1,9 +1,6 @@
 import secrets
 from unittest.mock import patch
 
-from common.helpers import generate_access_token
-from business.models import Company
-
 from django.test import TestCase
 from django.urls import reverse
 from django.core.cache import cache
@@ -13,6 +10,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from users.models import User, Review
+from common.helpers import generate_access_token
+from business.models import Company
 
 
 class TestViews(TestCase):

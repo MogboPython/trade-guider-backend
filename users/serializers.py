@@ -1,9 +1,8 @@
-from business.models import Company
-
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from users.models import User, Review, ReviewFlags, ReviewLikes
+from business.models import Company
 
 
 class LoginSerializer(serializers.Serializer):

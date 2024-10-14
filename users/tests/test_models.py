@@ -1,12 +1,12 @@
 from datetime import date
 
 import shortuuid
-from business.models import Company
 
 from django.test import TestCase
 from django.utils import timezone
 
 from users.models import User, Review, ReviewFlags, ReviewLikes
+from business.models import Company
 
 
 class TestUserModel(TestCase):

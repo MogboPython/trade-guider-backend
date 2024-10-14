@@ -1,8 +1,9 @@
 import shortuuid
-from business.models import Company
 
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+from business.models import Company
 
 # Create your models here.
 

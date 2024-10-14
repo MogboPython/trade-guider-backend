@@ -12,6 +12,8 @@ DATABASES = {'default': env.dj_db_url('BACKEND_DATABASE_URL')}
 
 CACHES = {'default': env.dj_cache_url('CACHE_URL')}
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.fly.dev']
+ALLOWED_HOSTS = ['*']
+
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.fly.dev']
 
 # CSRF_TRUSTED_ORIGINS = ['https://*.fly.dev']

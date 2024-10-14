@@ -2,6 +2,7 @@ venv/
 flimsy.txt
 tester.py
 z.txt
+staticfiles/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

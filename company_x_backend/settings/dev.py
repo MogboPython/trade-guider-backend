@@ -15,6 +15,8 @@ from datetime import timedelta
 
 from environs import Env
 
+from django.core.management.utils import get_random_secret_key
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -28,11 +30,12 @@ env = Env()
 # CORE SETTINGS
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 # ==============================================================================
+# DEBUG = True
 DEBUG = env.bool('DEBUG', True)
 if DEBUG:
     env.read_env(BASE_DIR / '.env')
 
-SECRET_KEY = env.str('API_SECRET_KEY')
+SECRET_KEY = env.str('API_SECRET_KEY', default=get_random_secret_key())
 
 ALLOWED_HOSTS = ['*']
 
@@ -71,7 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'companyXbackend.urls'
+ROOT_URLCONF = 'company_x_backend.urls'
 
 TEMPLATES = [
     {
@@ -92,14 +95,17 @@ TEMPLATES = [
 # ==============================================================================
 # STORAGES SETTINGS
 # ==============================================================================
-STORAGES = {'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'}}
+# STORAGES = {'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'}}
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
-WSGI_APPLICATION = 'companyXbackend.wsgi.application'
+WSGI_APPLICATION = 'company_x_backend.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-DATABASES = {'default': env.dj_db_url('DATABASE_URL')}
+DATABASES = {'default': env.dj_db_url('DATABASE_URL', default='postgres://postgres:postgres@localhost:5432/backend_db')}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -188,7 +194,7 @@ if DEBUG:
 # ==============================================================================
 # PLUNK SETTINGS
 # ==============================================================================
-PLUNK_API_KEY = env.str('PLUNK_API_KEY')
+PLUNK_API_KEY = env.str('PLUNK_API_KEY', default=get_random_secret_key())
 
 # ==============================================================================
 # DJANGO CORS HEADERS SETTINGS

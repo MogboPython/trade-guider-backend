@@ -55,7 +55,6 @@ class ReviewSerializer(serializers.ModelSerializer):
             'rating',
             'title',
             'review_body',
-            'date_of_experience',
             'created_at',
             'updated_at',
         ]
@@ -75,7 +74,6 @@ class ReviewSerializer(serializers.ModelSerializer):
             rating=validated_data['rating'],
             title=validated_data['title'],
             review_body=validated_data['review_body'],
-            date_of_experience=validated_data['date_of_experience'],
         )
 
     def to_representation(self, instance):
@@ -88,6 +86,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         }
         representation['company'] = {
             'company_name': instance.company.company_name,
+            'company_website': instance.company.website,
         }
         return representation
 

@@ -52,7 +52,6 @@ class TestViews(TestCase):
             'rating': 4,
             'title': 'Great experience',
             'review_body': 'I had a wonderful time with this company.',
-            'date_of_experience': now().date().isoformat(),
         }
 
     @patch('users.views.send_email')

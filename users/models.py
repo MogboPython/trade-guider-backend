@@ -5,8 +5,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from business.models import Company
 
-# Create your models here.
-
 
 class User(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)
@@ -47,7 +45,6 @@ class Review(models.Model):
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     title = models.CharField(max_length=200)
     review_body = models.TextField()
-    date_of_experience = models.DateField(default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

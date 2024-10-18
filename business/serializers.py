@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from users.models import Review
 from business.models import Company
 
 
@@ -44,3 +45,33 @@ class CompanySerializer(serializers.ModelSerializer):
             validated_data['subcategory'] = validated_data['subcategory'].lower().replace(' ', '_')
 
         return super().update(instance, validated_data)
+
+class ReviewSerializer(serializers.ModelSerializer):
+    company = serializers.PrimaryKeyRelatedField(queryset=Company.objects.all(), many=False)
+
+    class Meta:
+        model = Review
+        fields = [
+            'id',
+            'user',
+            'company',
+            'rating',
+            'title',
+            'review_body',
+            'created_at',
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = {
+            'user_id': instance.user.id,
+            'name': instance.user.name,
+            'country': instance.user.country,
+            'number_of_reviews': instance.user.number_of_reviews,
+        }
+        representation['company'] = {
+            'company_name': instance.company.company_name,
+            'company_website': instance.company.website,
+            'is_claimed': instance.company.is_claimed,
+        }
+        return representation

@@ -5,22 +5,14 @@ from django.core.cache import cache
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, GenericAPIView
 from rest_framework.response import Response
-
-# Create your views here.
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from common.helpers import send_email, generate_access_token, generate_refresh_token
 from common.responses import success_response
+from common.pagination import CustomPagination
 
 from .models import User, Review
 from .serializers import UserSerializer, LoginSerializer, ReviewSerializer, LoginWithOTPSerializer
-
-
-class CustomPagination(PageNumberPagination):
-    page_size = 20
-    page_size_query_param = 'page_size'
-    max_page_size = 50
 
 
 class RegisterUserAPIView(GenericAPIView):
@@ -56,7 +48,6 @@ class RegisterUserAPIView(GenericAPIView):
         </html>
         """  # noqa: E501
 
-        # TODO: don't forget
         send_email(to=email, subject=email_subject, html=email_body)
         serializer = self.get_serializer(user)
         response_data = serializer.data
@@ -184,7 +175,7 @@ class UserReviewListView(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        user_id = self.request.query_params.get('user_id')
+        user_id = self.kwargs.get('id')
         if user_id:
             queryset = queryset.filter(user__id=user_id)
 

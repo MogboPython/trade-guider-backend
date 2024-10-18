@@ -2,8 +2,6 @@ import shortuuid
 
 from django.db import models
 
-# Create your models here.
-
 
 class Company(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)
@@ -17,7 +15,7 @@ class Company(models.Model):
     work_email = models.EmailField(max_length=200, default='')
     phone_number = models.CharField(max_length=15, default='')
     country = models.CharField(max_length=100)
-    website = models.URLField(blank=True)
+    website = models.CharField(blank=True,  unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
     is_claimed = models.BooleanField(default=False)
@@ -45,6 +43,9 @@ class Company(models.Model):
     @property
     def is_authenticated(self):
         return True
+
+# class CompanyInfo(models.Model):
+#     about = models.TextField()
 
 
 # website

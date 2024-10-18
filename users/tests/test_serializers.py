@@ -95,7 +95,6 @@ class ReviewSerializerTestCase(TestCase):
             'rating': 4,
             'title': 'Great experience',
             'review_body': 'I had a wonderful time with this company.',
-            'date_of_experience': date(2024, 1, 15),
         }
 
         self.factory = APIRequestFactory()
@@ -110,7 +109,6 @@ class ReviewSerializerTestCase(TestCase):
             'rating': 4,
             'title': 'Great experience',
             'review_body': 'I had a wonderful time with this company.',
-            'date_of_experience': date(2024, 1, 15),
         }
 
         review = Review.objects.create(user=self.user_data, **review_data)
@@ -120,7 +118,6 @@ class ReviewSerializerTestCase(TestCase):
         self.assertEqual(data['rating'], self.review_data['rating'])
         self.assertEqual(data['title'], self.review_data['title'])
         self.assertEqual(data['review_body'], self.review_data['review_body'])
-        self.assertEqual(data['date_of_experience'], '2024-01-15')
 
         self.assertIn('id', data)
         self.assertIn('created_at', data)
@@ -136,7 +133,6 @@ class ReviewSerializerTestCase(TestCase):
         self.assertEqual(review.rating, self.review_data['rating'])
         self.assertEqual(review.title, self.review_data['title'])
         self.assertEqual(review.review_body, self.review_data['review_body'])
-        self.assertEqual(review.date_of_experience, self.review_data['date_of_experience'])
 
     def test_deserialize_invalid_data(self):
         invalid_data = self.review_data.copy()

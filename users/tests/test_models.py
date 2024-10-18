@@ -1,9 +1,6 @@
-from datetime import date
-
 import shortuuid
 
 from django.test import TestCase
-from django.utils import timezone
 
 from users.models import User, Review, ReviewFlags, ReviewLikes
 from business.models import Company
@@ -54,7 +51,6 @@ class TestUserModel(TestCase):
             title='Excellent Service!',
             review_body='I had a fantastic experience with this company. \
                 Their service was top-notch and the staff were very professional.',
-            date_of_experience=timezone.now(),
         )
 
         self.assertEqual(self.user.number_of_reviews, 1)
@@ -91,7 +87,6 @@ class TestReviewModel(TestCase):
             title='Excellent Service!',
             review_body='I had a fantastic experience with this company. \
                 Their service was top-notch and the staff were very professional.',
-            date_of_experience=date(2024, 1, 15),
         )
 
     def test_review_creation(self):
@@ -105,7 +100,6 @@ class TestReviewModel(TestCase):
                 Their service was top-notch and the staff were very professional.',
         )
         self.assertEqual(self.review.title, 'Excellent Service!')
-        self.assertEqual(self.review.date_of_experience, date(2024, 1, 15))
 
     def test_review_str_method(self):
         self.assertEqual(str(self.review), "Harper Lee's review of Tech Solutions Inc.")

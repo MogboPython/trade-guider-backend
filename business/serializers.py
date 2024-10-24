@@ -46,7 +46,26 @@ class CompanySerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
-class ReviewSerializer(serializers.ModelSerializer):
+class CompanySummarySerializer(serializers.ModelSerializer):
+    number_of_reviews = serializers.ReadOnlyField()
+    average_rating = serializers.ReadOnlyField(source='avg_rating')
+
+    class Meta:
+        model = Company
+        fields = [
+            'id',
+            'company_name',
+            'category',
+            'subcategory',
+            'country',
+            'website',
+            'is_verified',
+            'is_claimed',
+            'number_of_reviews',
+            'average_rating'
+        ]
+
+class CompanyReviewSerializer(serializers.ModelSerializer):
     company = serializers.PrimaryKeyRelatedField(queryset=Company.objects.all(), many=False)
 
     class Meta:
@@ -68,10 +87,5 @@ class ReviewSerializer(serializers.ModelSerializer):
             'name': instance.user.name,
             'country': instance.user.country,
             'number_of_reviews': instance.user.number_of_reviews,
-        }
-        representation['company'] = {
-            'company_name': instance.company.company_name,
-            'company_website': instance.company.website,
-            'is_claimed': instance.company.is_claimed,
         }
         return representation

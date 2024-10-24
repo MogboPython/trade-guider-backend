@@ -207,8 +207,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 JWT_AUTH = {
     'JWT_ALGORITHM': 'HS256',
     'JWT_SECRET_KEY': SECRET_KEY,
-    'JWT_EXPIRATION_DELTA': timedelta(hours=1),  # not safe. just for testing purposes
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),  # not safe. just for testing purposes
+    'JWT_EXPIRATION_DELTA': timedelta(days=7),  # not safe. just for testing purposes
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=14),  # not safe. just for testing purposes
 }
 
 # ==============================================================================

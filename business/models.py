@@ -6,6 +6,7 @@ from django.db import models
 class Company(models.Model):
     id = models.CharField(max_length=27, unique=True, primary_key=True)
 
+    #TODO: Company logo, About, should come from frontend collect url
     company_name = models.CharField(max_length=200)
     category = models.CharField(max_length=100)
     subcategory = models.CharField(max_length=200, default='')

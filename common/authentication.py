@@ -2,6 +2,7 @@ import jwt
 
 from django.conf import settings
 
+from rest_framework import permissions
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authentication import BaseAuthentication
 
@@ -35,3 +36,11 @@ class JWTAuthentication(BaseAuthentication):
             raise AuthenticationFailed(msg) from e
 
         return (user, token)
+
+
+class IsOwnerOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if hasattr(obj, 'user'):
+            return obj.user == request.user
+
+        return obj == request.user

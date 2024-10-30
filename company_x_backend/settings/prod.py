@@ -17,3 +17,8 @@ ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.fly.dev']
 
 # CSRF_TRUSTED_ORIGINS = ['https://*.fly.dev']
+
+# CORS_ORIGIN_WHITELIST = [
+#     'http://example.com',
+#     'https://example.com',
+# ]

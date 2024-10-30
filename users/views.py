@@ -4,9 +4,10 @@ from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 
 from rest_framework import status
+from rest_framework.mixins import DestroyModelMixin
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, GenericAPIView
 from rest_framework.response import Response
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from common.helpers import send_email, generate_access_token, generate_refresh_token
@@ -14,8 +15,14 @@ from common.responses import success_response
 from common.pagination import CustomPagination
 from common.authentication import IsOwnerOnly
 
-from .models import User, Review
-from .serializers import UserSerializer, LoginSerializer, ReviewSerializer, LoginWithOTPSerializer
+from .models import User, Review, ReviewLikes
+from .serializers import (
+    UserSerializer,
+    LoginSerializer,
+    ReviewSerializer,
+    ReviewLikesSerializer,
+    LoginWithOTPSerializer,
+)
 
 
 class RegisterUserAPIView(GenericAPIView):
@@ -60,7 +67,6 @@ class RegisterUserAPIView(GenericAPIView):
         return success_response(data, status.HTTP_200_OK)
 
 
-# TODO: login route that returns otp
 class LoginOtpAPIView(GenericAPIView):
     """Endpoint to get login otp for a user."""
 
@@ -141,6 +147,7 @@ class UpdateUserProfileAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOnly]
     serializer_class = UserSerializer
 
+    #FIXME: Issue here
     def get_object(self):
         user = self.request.user
         user_id = self.kwargs.get('user_id')
@@ -201,7 +208,7 @@ class ReviewListView(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        user_id = self.kwargs.get('id')
+        user_id = self.kwargs.get('user_id')
         if user_id:
             queryset = queryset.filter(user__id=user_id)
 
@@ -217,7 +224,7 @@ class ReviewListView(ListAPIView):
 class ReviewDetailAPIView(ListAPIView):
     """Endpoint to fetch details of a single review."""
 
-    lookup_field = 'id'
+    lookup_field = 'review_id'
     serializer_class = ReviewSerializer
     queryset = Review.objects.get_queryset()
 
@@ -255,35 +262,26 @@ class DeleteReviewAPIView(DestroyAPIView):
         }
         return success_response(response_data, status.HTTP_200_OK)
 
-# TODO: get all reviews by single user for themselves, authentication needed, delete review? ******
-# TODO: Route to update profile
+#TODO: Test likes
+class LikeCreateAPIView(CreateAPIView, DestroyModelMixin):
+    serializer_class = ReviewLikesSerializer
+    permission_classes = [IsAuthenticated]
 
-# class UserAuthenticationAPIView(GenericAPIView):
-#     permission_classes = [AllowAny]
-#     serializer_class = AdminLoginSerializer
+    def get_queryset(self):
+        user = self.request.user
+        review = Review.objects.get(id=self.kwargs['review_id'])
+        return ReviewLikes.objects.filter(user=user, review=review)
 
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
+    def perform_create(self, serializer):
+        if self.get_queryset().exists():
+            msg = 'You have already liked for this post'
+            raise ValidationError(msg)
+        serializer.save(user=self.request.user, review=Review.objects.get(id=self.kwargs['review_id']))
+        return success_response("review succesfully liked", status=status.HTTP_201_CREATED)
 
-#         auth_service = init_authentication_service()
-#         response = auth_service.Authenticate(
-#             AuthenticateRequest(
-#                 email=serializer.validated_data['email'],
-#                 password=serializer.validated_data['password'],
-#             )
-#         )
-
-#         return success_response(
-#             data={
-#                 'access_token': response.access_token,
-#                 'user': {
-#                     'id': response.user.id,
-#                     'email': response.user.email,
-#                     'first_name': response.user.first_name,
-#                     'last_name': response.user.last_name,
-#                     'is_admin': True,
-#                 },
-#             },
-#             status_code=status.HTTP_200_OK,
-#         )
+    def delete(self, request, *args, **kwargs):
+        if self.get_queryset().exists():
+            self.get_queryset().delete()
+            return success_response("review successfully deleted", status=status.HTTP_204_NO_CONTENT)
+        msg = 'You never liked for this post'
+        raise ValidationError(msg)

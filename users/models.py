@@ -65,16 +65,18 @@ class Review(models.Model):
     def number_of_flags(self):
         return self.flags.count()
 
-
-# TODO: Check who liked
 class ReviewLikes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('review', 'user')
 
-# TODO: Check who tagged
 class ReviewFlags(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='flags')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('review', 'user')

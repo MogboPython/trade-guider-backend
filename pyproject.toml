@@ -85,7 +85,7 @@ select = [
     "FURB",
     "RUF",
 ]
-ignore = ["COM812", "ISC001", "DJ008", "PLR0913", "PLR2004", "RUF012", "ARG002"]
+ignore = ["COM812", "ISC001", "DJ008", "PLR0913", "PLR2004", "RUF012", "ARG002", "PT009"]
 
 [tool.ruff.lint.isort]
 length-sort = true

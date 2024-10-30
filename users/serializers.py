@@ -45,6 +45,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     company = serializers.PrimaryKeyRelatedField(queryset=Company.objects.all(), many=False)
+    like_count = serializers.IntegerField(source='likes.count', read_only=True)
+    flag_count = serializers.IntegerField(source='flags.count', read_only=True)
 
     class Meta:
         model = Review
@@ -55,6 +57,8 @@ class ReviewSerializer(serializers.ModelSerializer):
             'rating',
             'title',
             'review_body',
+            'like_count',
+            'flag_count',
             'created_at',
             'updated_at',
         ]
@@ -103,11 +107,3 @@ class ReviewFlagsSerializer(serializers.ModelSerializer):
         model = ReviewFlags
         fields = ['id', 'user', 'review', 'created']
         read_only_fields = ['created_at']
-
-
-class ReviewDetailSerializer(ReviewSerializer):
-    likes = ReviewLikesSerializer(many=True, read_only=True)
-    flags = ReviewFlagsSerializer(many=True, read_only=True)
-
-    class Meta(ReviewSerializer.Meta):
-        fields = [*ReviewSerializer.Meta.fields, 'likes', 'flags']

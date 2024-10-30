@@ -54,6 +54,7 @@ if DEBUG:
     DJANGO_APPS.insert(5, 'whitenoise.runserver_nostatic')
 
 THIRD_PARTY_APPS = [
+    'corsheaders',
     'drf_yasg',
     'rest_framework',
 ]
@@ -95,13 +96,9 @@ TEMPLATES = [
 # ==============================================================================
 # STORAGES SETTINGS
 # ==============================================================================
-# STORAGES = {'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'}}
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 WSGI_APPLICATION = 'company_x_backend.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -173,7 +170,7 @@ CACHES = {
         'LOCATION': 'redis://127.0.0.1:6379',
     }
 }
-
+# CACHES = {'default': env.dj_cache_url('CACHE_URL')}
 
 # ==============================================================================
 # DRF-YASG SETTINGS
@@ -199,7 +196,7 @@ PLUNK_API_KEY = env.str('PLUNK_API_KEY', default=get_random_secret_key())
 # ==============================================================================
 # DJANGO CORS HEADERS SETTINGS
 # ==============================================================================
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 # ==============================================================================
 # PYJWT SETTINGS

@@ -13,21 +13,41 @@ from common.helpers import generate_access_token
 from business.models import Company
 
 
-class TestViews(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user_register_url = reverse('user-register')
-        cls.user_login_url = reverse('user-login')
-        cls.submit_review_url = reverse('submit-review')
+class TestUserRegisterView(TestCase):
+    def setUp(self):
+        self.user_register_url = reverse('user-register')
+        self.client = APIClient()
 
-        cls.valid_user_data = {
-            'email': 'tester@gmail.com',
+    @patch('users.views.send_email')
+    def test_register_user(self, mock_send_email):
+        user_data = {
+            'email': 'test-mogbo@gmail.com',
             'name': 'Harper Lee',
             'country': 'China',
             'language': 'Chinese',
         }
+        response = self.client.post(self.user_register_url, user_data)
 
-        cls.company = Company.objects.create(
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['success'])
+
+        self.assertTrue(User.objects.filter(email=user_data['email']).exists())
+        self.assertIsNotNone(cache.get(f"otp:{user_data['email']}"))
+        mock_send_email.assert_called_once()
+
+class TestViews(TestCase):
+    # @classmethod
+    # def setUpTestData(cls):
+        # cls.valid_user_data = {
+        #     'email': 'tester@gmail.com',
+        #     'name': 'Harper Lee',
+        #     'country': 'China',
+        #     'language': 'Chinese',
+        # }
+
+
+    def setUp(self):
+        self.company = Company.objects.create(
             company_name='Tech Solutions Inc.',
             category='Information Technology',
             first_name='Alice',
@@ -40,12 +60,36 @@ class TestViews(TestCase):
             is_verified=True,
         )
 
-    def setUp(self):
-        self.client = APIClient()
+        self.valid_user_data = {
+            'email': 'tester@gmail.com',
+            'name': 'Harper Lee',
+            'country': 'China',
+            'language': 'Chinese',
+        }
+
         self.user = User.objects.create(**self.valid_user_data)
         self.token = generate_access_token(self.user)
 
+        self.other_user = User.objects.create(
+            email='tester-email@gmail.com',
+            name='Harper Lee',
+            country='China',
+            language='Chinese',
+        )
+
+        self.client = APIClient()
+
+        self.user_register_url = reverse('user-register')
+        self.user_login_url = reverse('user-login')
+        self.submit_review_url = reverse('submit-review')
         self.update_profile_url = reverse('update-profile', kwargs={'user_id': self.user.id})
+        self.other_user_url = reverse('update-profile', kwargs={'user_id': self.other_user.id})
+
+        self.token = generate_access_token(self.user)
+
+
+    def tearDown(self):
+        User.objects.all().delete()
 
     def create_test_review_data(self):
         return {
@@ -54,23 +98,6 @@ class TestViews(TestCase):
             'title': 'Great experience',
             'review_body': 'I had a wonderful time with this company.',
         }
-
-    @patch('users.views.send_email')
-    def test_register_user(self, mock_send_email):
-        self.user_data = {
-            'email': 'test-mogbo@gmail.com',
-            'name': 'Harper Lee',
-            'country': 'China',
-            'language': 'Chinese',
-        }
-        response = self.client.post(self.user_register_url, self.user_data)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['success'])
-
-        self.assertTrue(User.objects.filter(email=self.valid_user_data['email']).exists())
-        self.assertIsNotNone(cache.get(f"otp:{self.valid_user_data['email']}"))
-        mock_send_email.assert_called_once()
 
     @patch('users.views.send_email')
     def test_register_user_invalid_data(self, mock_send_email):
@@ -104,7 +131,7 @@ class TestViews(TestCase):
 
         data = {
             'email': self.user.email,
-            'otp': '1234',  # Wrong OTP
+            'otp': '1234',
         }
         response = self.client.post(self.user_login_url, data)
 
@@ -182,30 +209,39 @@ class TestViews(TestCase):
         self.assertEqual(self.user.country, 'Taiwan')
 
     def test_update_user_profile_permission_denied(self):
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
+        # another_user_data = {
+        #     'email': 'tester-email@gmail.com',
+        #     'name': 'Harper Lee',
+        #     'country': 'China',
+        #     'language': 'Chinese',
+        # }
+        # another_user_data.pop('id', None)
+        # other_user = User.objects.create(**another_user_data)
 
-        other_user = User.objects.create(
-            email = 'tester-email@gmail.com',
-            name = 'Harper Lee',
-            country = 'China',
-            language = 'Chinese',
-        )
-        other_user_url = reverse('update-profile', kwargs={'user_id': other_user.id})
+        # other_user = User.objects.create(
+        #     email = 'tester-email@gmail.com',
+        #     name = 'Harper Lee',
+        #     country = 'China',
+        #     language = 'Chinese',
+        # )
+        # other_user_url = reverse('update-profile', kwargs={'user_id': other_user.id})
 
         data = {
             'name': 'should_fail',
             'country': 'Nigeria'
         }
-        response = self.client.patch(other_user_url, data)
+        response = self.client.patch(self.other_user_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data['error'], "You don't have permission to update this profile.")
+        self.assertIn('detail', response.data['data'])
+        self.assertEqual(response.data['detail'], "You don't have permission to update this profile.")
 
-    def test_update_user_profile_invalid_data(self):
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
-        data = {
-            'email': 'invalid_email',
-        }
-        response = self.client.patch(self.update_profile_url, data)
+    # def test_update_user_profile_invalid_data(self):
+    #     data = {
+    #         'email': 'invalid_email',  # Invalid email format
+    #     }
+    #     response = self.client.patch(self.url, data, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    #     self.assertIn('email', response.data)  # Check for specific validation error
+

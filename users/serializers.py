@@ -98,12 +98,12 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ReviewLikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewLikes
-        fields = ['id', 'user', 'review', 'created']
+        fields = ['id', 'user', 'review', 'created_at']
         read_only_fields = ['created_at']
 
 
 class ReviewFlagsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewFlags
-        fields = ['id', 'user', 'review', 'created']
+        fields = ['id', 'user', 'review', 'created_at']
         read_only_fields = ['created_at']

@@ -59,7 +59,7 @@ class TestUserModel(TestCase):
 class TestReviewModel(TestCase):
     def setUp(self):
         self.user = User.objects.create(
-            id=f'user_{shortuuid.uuid()}',
+            id=shortuuid.uuid(),
             email='tester@gmail.com',
             name='Harper Lee',
             country='China',
@@ -67,7 +67,7 @@ class TestReviewModel(TestCase):
         )
 
         self.tech = Company.objects.create(
-            id=f'{shortuuid.uuid()}',
+            id=shortuuid.uuid(),
             company_name='Tech Solutions Inc.',
             category='Information Technology',
             first_name='Alice',

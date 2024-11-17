@@ -147,7 +147,6 @@ class UpdateUserProfileAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOnly]
     serializer_class = UserSerializer
 
-    #FIXME: Issue here
     def get_object(self):
         user = self.request.user
         user_id = self.kwargs.get('user_id')
@@ -170,11 +169,11 @@ class UpdateUserProfileAPIView(UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        response_data = {
+        data = {
             'message': 'Profile updated successfully',
             'data': serializer.data
         }
-        return success_response(response_data, status.HTTP_200_OK)
+        return success_response(data, status.HTTP_200_OK)
 
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True

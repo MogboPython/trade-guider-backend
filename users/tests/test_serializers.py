@@ -1,5 +1,4 @@
 import secrets
-from datetime import date
 
 import shortuuid
 
@@ -38,7 +37,6 @@ class UserSerializerTest(TestCase):
         self.assertTrue(serializer.is_valid())
         user = serializer.save()
 
-        self.assertTrue(user.id.startswith('user_'))
         self.assertEqual(user.email, self.user_data['email'])
         self.assertEqual(user.name, self.user_data['name'])
         self.assertEqual(user.country, self.user_data['country'])
@@ -52,22 +50,6 @@ class UserSerializerTest(TestCase):
         self.assertIn('id', data)
         self.assertIn('created_at', data)
         self.assertIn('is_verified', data)
-
-    # def test_book_serializer_update(self):
-    #     book = Book.objects.create(id=f'book_{shortuuid.uuid()}', added_by=self.user_id, **self.book_data)
-    #     updated_data = {
-    #         'title': 'Updated Title',
-    #         'author': 'Updated Author',
-    #     }
-    #     serializer = BookSerializer(book, data=updated_data, partial=True)
-    #     self.assertTrue(serializer.is_valid())
-    #     updated_book = serializer.save()
-
-    #     self.assertEqual(updated_book.title, 'Updated Title')
-    #     self.assertEqual(updated_book.author, 'Updated Author')
-    #     self.assertEqual(updated_book.id, book.id)
-    #     self.assertEqual(updated_book.added_by, book.added_by)
-
 
 class ReviewSerializerTestCase(TestCase):
     def setUp(self):

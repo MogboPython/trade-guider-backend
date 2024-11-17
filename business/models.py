@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Company(models.Model):
-    id = models.CharField(max_length=27, unique=True, primary_key=True)
+    id = models.CharField(max_length=27, unique=True, primary_key=True, default=shortuuid.uuid)
 
     #TODO: Company logo, About, should come from frontend collect url
     company_name = models.CharField(max_length=200)
@@ -25,9 +25,6 @@ class Company(models.Model):
         return self.company_name
 
     def save(self, *args, **kwargs) -> None:
-        if not self.id:
-            self.id = f'{shortuuid.uuid()}'
-
         if self.work_email:
             self.is_claimed = True
 
